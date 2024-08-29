@@ -2,7 +2,7 @@
   "development": {
     "username": "omen",
     "password": "@Limon199031",
-    "database": "database_development",
+    "database": "Safar",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
