@@ -13,9 +13,13 @@ function hashThePassword(password){
 }
 
 function validatePhoneNumber(phone){
-    const phoneRegex = /^01[3-9]\d{8}$/;
-    if(!phoneRegex.test(phone)) return false;
-    else return true;
+    const validPrefixes = ['013', '014', '015', '016', '017', '018', '019'];
+    let cleanedNumber = phone.replace(/\D/g, '');
+    if (cleanedNumber.length !== 11 || !cleanedNumber.startsWith('01')) {
+        return false;
+    }
+    const prefix = cleanedNumber.substring(0, 3);
+    return validPrefixes.includes(prefix);
 }
 
 function validatePIN(PIN){
