@@ -12,10 +12,24 @@ async function signUp(req,res) {
         console.log(error);
         if(error instanceof Error) ErrorResponse.error = error;
         else ErrorResponse.error = new AppError(['service unavailable'],StatusCodes.INTERNAL_SERVER_ERROR);
-        return res.status(error.statusCode).json(ErrorResponse);
+        return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
+    }
+}
+
+async function signIn(req,res) {
+    try {
+        const response = await UserService.signIn(req.body);
+        SuccessResponse.data = response;
+        return res.status(StatusCodes.ACCEPTED).json(SuccessResponse);
+    } catch (error) {
+        console.log(error);
+        if(error instanceof Error) ErrorResponse.error = error;
+        else ErrorResponse.error = new AppError(['service unavailable'],StatusCodes.INTERNAL_SERVER_ERROR);
+        return res.status(ErrorResponse.error.statusCode).json(ErrorResponse);
     }
 }
 
 module.exports = {
     signUp,
+    signIn,
 }

@@ -27,6 +27,19 @@ function signUp(req,res,next){
     next();
 }
 
+function signIn(req,res,next){
+    if(!req.body.phoneOrEmail){
+        ErrorResponse.error = new AppError(['phone or email required'],StatusCodes.BAD_REQUEST);
+        return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
+    }
+    if(!req.body.password){
+        ErrorResponse.error = new AppError(['password required'],StatusCodes.BAD_REQUEST);
+        return res.status(StatusCodes.BAD_REQUEST).json(ErrorResponse);
+    }
+    next();
+}
+
 module.exports = {
     signUp,
+    signIn,
 }
