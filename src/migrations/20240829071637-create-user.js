@@ -13,9 +13,6 @@ module.exports = {
       userName: {
         type: Sequelize.STRING,
         allowNull:false,
-        validate:{
-          isAlpha:true,
-        }
       },
       userEmail: {
         type: Sequelize.STRING,
@@ -29,7 +26,8 @@ module.exports = {
         allowNull:false,
         validate:{
           len:11
-        }
+        },
+        unique:true,
       },
       password: {
         type: Sequelize.STRING,

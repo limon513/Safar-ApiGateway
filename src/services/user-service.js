@@ -10,7 +10,7 @@ async function signUp(data) {
         const response = await UserRepo.signUp(data);
         return response;
     } catch (error) {
-        if(error.name=='SequelizeValidationError'){
+        if(error.name=='SequelizeValidationError' || error.name=='SequelizeUniqueConstraintError'){
             let explainations = [];
             error.errors.forEach((err)=>explainations.push(err.message));
             throw new AppError(explainations,StatusCodes.BAD_REQUEST);
@@ -44,7 +44,17 @@ async function signIn(data) {
     }
 }
 
+async function getUser(data) {
+    try {
+        const response = await UserRepo.getUser(data);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+}
+
 module.exports = {
     signUp,
     signIn,
+    getUser,
 }
