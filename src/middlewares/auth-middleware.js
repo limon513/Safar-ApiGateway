@@ -13,7 +13,11 @@ function authenticate(req,res,next){
     }
     try {
         const user = jwt.verify(token,serverConfig.JWTSECRET);
-        req.data = user;
+        req.body.agencyId = user.userId;
+        req.body.agencyName = user.userName;
+        req.body.agencyEmail = user.userEmail;
+        req.body.agencyPhone = user.userPhone;
+        console.log('req body in authentication',req.body);
         next();
     } catch (error) {
         console.log(error);
@@ -24,7 +28,7 @@ function authenticate(req,res,next){
 
 async function authorizeAdmin(req,res,next){
     try {
-        const response = await UserService.getUser(req.body.userPhone);
+        const response = await UserService.getUser(req.body.agencyPhone);
         if(!response){
             throw new AppError(['no active admin found'],StatusCodes.NOT_FOUND);
         }
@@ -40,14 +44,16 @@ async function authorizeAdmin(req,res,next){
 }
 
 async function authorizeAgency(req,res,next){
+    console.log('in side authorization',req.body);
     try {
-        const response = await UserService.getUser(req.body.userPhone);
+        const response = await UserService.getUser(req.body.agencyPhone);
         if(!response){
             throw new AppError(['no active admin found'],StatusCodes.NOT_FOUND);
         }
         if(response.role !== Enums.ACC_TYPE.AGENCY){
             throw new AppError(['you are not authorized for this request'],StatusCodes.UNAUTHORIZED);
         }
+
         next();
     } catch (error) {
         if(error instanceof Error) ErrorResponse.error = error;

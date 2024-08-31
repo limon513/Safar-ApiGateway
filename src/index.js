@@ -1,30 +1,40 @@
 const { server_config, Logger } = require('./config');
 const express = require('express');
 const apiGateWayRoutes = require('./routes');
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware, fixRequestBody } = require('http-proxy-middleware');
+const {AuthMiddlewares} = require('./middlewares');
 
 const app = express();
+
+app.use(express.urlencoded({ extended: true }));
 
 app.use(
     '/safar/public',
     createProxyMiddleware({
         target: 'http://localhost:3002/api/public',
         changeOrigin: true,
-        pathRewrite:{'^/safar/public':'/'}
+        pathRewrite:{'^/safar/public':'/'},
+        on: {
+            proxyReq: fixRequestBody,
+        },
     }),
 );
 
 app.use(
     '/safar/private',
+    AuthMiddlewares.authenticate,
+    AuthMiddlewares.authorizeAgency,
     createProxyMiddleware({
         target: 'http://localhost:3002/api/private',
         changeOrigin: true,
-        pathRewrite:{'^/safar/private':'/'}
+        pathRewrite:{'^/safar/private':'/'},
+        on: {
+            proxyReq: fixRequestBody,
+        },
     }),
 );
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', apiGateWayRoutes);
 
