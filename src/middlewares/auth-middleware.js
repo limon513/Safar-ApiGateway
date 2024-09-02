@@ -17,7 +17,7 @@ function authenticate(req,res,next){
         req.body.agencyName = user.userName;
         req.body.agencyEmail = user.userEmail;
         req.body.agencyPhone = user.userPhone;
-        console.log('req body in authentication',req.body);
+        //console.log('req body in authentication',req.body);
         next();
     } catch (error) {
         console.log(error);
@@ -44,7 +44,7 @@ async function authorizeAdmin(req,res,next){
 }
 
 async function authorizeAgency(req,res,next){
-    console.log('in side authorization',req.body);
+    //console.log('in side authorization',req.body);
     try {
         const response = await UserService.getUser(req.body.agencyPhone);
         if(!response){

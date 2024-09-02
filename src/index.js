@@ -34,6 +34,18 @@ app.use(
     }),
 );
 
+app.use(
+    '/safar_booking/public',
+    createProxyMiddleware({
+        target:'http://localhost:3004/api/public',
+        changeOrigin:true,
+        pathRewrite:{'^/safar_booking/public':'/'},
+        on:{
+            proxyReq: fixRequestBody,
+        },
+    }),
+);
+
 app.use(express.json());
 
 app.use('/api', apiGateWayRoutes);
